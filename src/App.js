@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { supabase } from "./SupaBaseClient";
 import "./App.css";
+import { Spin, Table, Button, Tag } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 
 const App = () => {
   const [countries, setCountries] = useState([]);
@@ -8,14 +10,18 @@ const App = () => {
   const [newCountryCode, setNewCountryCode] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newStatus, setNewStatus] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getCountries();
   }, []);
 
   async function getCountries() {
+    setLoading(true);
     const { data } = await supabase.from("countries").select();
     setCountries(data);
+    setLoading(false);
+
   }
 
   async function addCountry() {
@@ -40,7 +46,7 @@ const App = () => {
           setNewCountryName("");
           setNewCountryCode("");
           setNewEmail("");
-          setNewStatus(1); // Set the default value to 1
+          setNewStatus(1);
         }
       } catch (error) {
         console.error("Error adding:", error);
@@ -48,50 +54,113 @@ const App = () => {
     }
   }
 
+  async function deleteCountry(id) {
+    try {
+      const { error } = await supabase.from("countries").delete().eq("id", id);
+      if (error) {
+        console.error("Error deleting:", error);
+      } else {
+        const updatedCountries = countries.filter((country) => country.id !== id);
+        setCountries(updatedCountries);
+      }
+    } catch (error) {
+      console.error("Error deleting:", error);
+    }
+  }
+
   return (
     <div className="container">
-      <h1>Add New</h1>
-      <input
-        className="input-field"
-        type="text"
-        placeholder="Name"
-        value={newCountryName}
-        onChange={(e) => setNewCountryName(e.target.value)}
-      />
-      <input
-        className="input-field"
-        type="text"
-        placeholder="Country Code"
-        value={newCountryCode}
-        onChange={(e) => setNewCountryCode(e.target.value)}
-      />
-      <input
-        className="input-field"
-        type="text"
-        placeholder="Email"
-        value={newEmail}
-        onChange={(e) => setNewEmail(e.target.value)}
-      />
-      <select
-        className="select-field"
-        value={newStatus}
-        onChange={(e) => setNewStatus(e.target.value)}
-      >
-        <option value={1}>Active</option>
-        <option value={2}>Inactive</option>
-      </select>
-      <button className="add-button" onClick={addCountry}>
-        Add
-      </button>
+      <h1>Create</h1>
+      <div className="input-container">
+  <input
+    className="input-field"
+    type="text"
+    placeholder="Name"
+    value={newCountryName}
+    onChange={(e) => setNewCountryName(e.target.value)}
+  />
+  <input
+    className="input-field"
+    type="text"
+    placeholder="Country Code"
+    value={newCountryCode}
+    onChange={(e) => setNewCountryCode(e.target.value)}
+  />
+  <input
+    className="input-field"
+    type="text"
+    placeholder="Email"
+    value={newEmail}
+    onChange={(e) => setNewEmail(e.target.value)}
+  />
+  <select
+    className="select-field"
+    value={newStatus}
+    onChange={(e) => setNewStatus(e.target.value)}
+  >
+    <option value={1}>Active</option>
+    <option value={2}>Inactive</option>
+  </select>
+  <button className="add-button" onClick={addCountry}>
+    Add
+  </button>
+</div>
+
       <h1>List</h1>
-      <ul className="country-list">
-        {countries.map((country) => (
-          <li key={country.id}>
-            {country.name} ({country.ccode}) - {country.email} -{" "}
-            {country.status === 1 ? "Active" : "Inactive"}
-          </li>
-        ))}
-      </ul>
+      <div className="table-container">
+      <div className="table-loader">
+          {loading && <Spin size="large" />}
+        </div>
+        {!loading && (
+          <Table
+            className="country-table"
+            dataSource={countries}
+            columns={[
+              {
+                title: "Name",
+                dataIndex: "name",
+                key: "name",
+              },
+              {
+                title: "Country Code",
+                dataIndex: "ccode",
+                key: "ccode",
+              },
+              {
+                title: "Email",
+                dataIndex: "email",
+                key: "email",
+              },
+              {
+                title: "Status",
+                dataIndex: "status",
+                key: "status",
+                render: (status) => (
+                  <Tag color={status === 1 ? "green" : "red"}>
+                    {status === 1 ? "Active" : "Inactive"}
+                  </Tag>
+                ),
+              },
+              {
+                title: "Actions",
+                key: "actions",
+                render: (text, record) => (
+                  <span>
+                    <Button
+                      type="danger"
+                      style={{ background: "red", color: "white" }}
+                      icon={<DeleteOutlined />}
+                      onClick={() => deleteCountry(record.id)}
+                    >
+                      Delete
+                    </Button>
+                  </span>
+                ),
+              },
+            ]}
+          />
+        )}
+      </div>
     </div>
   );
 }
