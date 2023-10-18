@@ -1,38 +1,47 @@
-.App {
-  text-align: center;
+/* CSS Styles */
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 15px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin: 5px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.select-field {
+  width: 100%;
+  padding: 10px;
+  margin: 5px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.add-button {
+  padding: 10px;
+  margin: 5px;
+  background-color: #0074D9;
   color: white;
+  border: none;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+.add-button:hover {
+  background-color: #0056A0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+.country-list {
+  list-style: none;
+  padding: 0;
+}
+
+.country-list li {
+  margin: 5px 0;
+}
+
+/* Make the page responsive */
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
   }
 }

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./SupaBaseClient";
+import "./App.css";
 
-function App() {
+const App = () => {
   const [countries, setCountries] = useState([]);
   const [newCountryName, setNewCountryName] = useState("");
   const [newCountryCode, setNewCountryCode] = useState("");
@@ -30,8 +31,8 @@ function App() {
               status: newStatus,
             },
           ]);
-          alert("Added successfully!");
-          getCountries();
+        alert("Added successfully!");
+        getCountries();
         if (error) {
           console.error("Error adding:", error);
         } else {
@@ -39,7 +40,7 @@ function App() {
           setNewCountryName("");
           setNewCountryCode("");
           setNewEmail("");
-          setNewStatus(null);
+          setNewStatus(1); // Set the default value to 1
         }
       } catch (error) {
         console.error("Error adding:", error);
@@ -48,44 +49,46 @@ function App() {
   }
 
   return (
-    <div style={{ padding: 15 }}>
+    <div className="container">
       <h1>Add New</h1>
       <input
-        style={{ padding: 10, margin: 5}}
+        className="input-field"
         type="text"
-        placeholder="name"
+        placeholder="Name"
         value={newCountryName}
         onChange={(e) => setNewCountryName(e.target.value)}
       />
       <input
-        style={{ padding: 10 }}
+        className="input-field"
         type="text"
-        placeholder="country code"
+        placeholder="Country Code"
         value={newCountryCode}
         onChange={(e) => setNewCountryCode(e.target.value)}
       />
       <input
-      style={{ padding: 10, margin: 5 }}
-      type="text"
-      placeholder="Email"
-      value={newEmail}
-      onChange={(e) => setNewEmail(e.target.value)}
+        className="input-field"
+        type="text"
+        placeholder="Email"
+        value={newEmail}
+        onChange={(e) => setNewEmail(e.target.value)}
       />
       <select
-      style={{ padding: 10, margin: 5 }}
-      value={newStatus}
-      defaultValue={1}
-      onChange={(e) => setNewStatus(e.target.value)}
+        className="select-field"
+        value={newStatus}
+        onChange={(e) => setNewStatus(e.target.value)}
       >
-      <option value={1}>Active</option>
-      <option value={2}>Inactive</option>
+        <option value={1}>Active</option>
+        <option value={2}>Inactive</option>
       </select>
-      <button style={{ padding: 10, margin: 5 }} onClick={addCountry}>Add</button>
+      <button className="add-button" onClick={addCountry}>
+        Add
+      </button>
       <h1>List</h1>
-      <ul>
+      <ul className="country-list">
         {countries.map((country) => (
           <li key={country.id}>
-            {country.name} ({country.ccode}) - {country.email} - {country.status}
+            {country.name} ({country.ccode}) - {country.email} -{" "}
+            {country.status === 1 ? "Active" : "Inactive"}
           </li>
         ))}
       </ul>
