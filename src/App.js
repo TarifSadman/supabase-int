@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "./SupaBaseClient";
 import "./App.css";
 import { Spin, Table, Button, Tag } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import EditModal from "./EditModal";
 
 
@@ -115,9 +115,13 @@ const App = () => {
       <option value={1}>Active</option>
       <option value={2}>Inactive</option>
     </select>
-    <button className="add-button" onClick={addCountry}>
-      Add
-    </button>
+    <Button
+    type="primary"
+    icon={<PlusCircleOutlined />}
+    onClick={addCountry}
+  >
+    Add
+  </Button>
   </div>
 
       <h1>List</h1>

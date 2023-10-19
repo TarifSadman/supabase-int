@@ -25,21 +25,6 @@
   font-size: 16px;
 }
 
-.add-button {
-  width: 20%;
-  padding: 10px 18px;
-  background-color: #0074D9;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.add-button:hover {
-  background-color: #0056A0;
-}
-
 .table-container {
   position: relative;
   margin-top: 20px;
