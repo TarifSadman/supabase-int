@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "./SupaBaseClient";
 import "./App.css";
 import { Spin, Table, Button, Tag } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import EditModal from "./EditModal";
+
 
 const App = () => {
   const [countries, setCountries] = useState([]);
@@ -11,6 +13,8 @@ const App = () => {
   const [newEmail, setNewEmail] = useState("");
   const [newStatus, setNewStatus] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [editedCountry, setEditedCountry] = useState({});
 
   useEffect(() => {
     getCountries();
@@ -68,43 +72,53 @@ const App = () => {
     }
   }
 
+  const handleEdit = (record) => {
+    setEditedCountry(record);
+    setIsEditModalVisible(true);
+  };
+
+  // Function to close the modal
+  const handleEditModalClose = () => {
+    setIsEditModalVisible(false);
+  };
+
   return (
-    <div className="container">
-      <h1>Create</h1>
-      <div className="input-container">
-  <input
-    className="input-field"
-    type="text"
-    placeholder="Name"
-    value={newCountryName}
-    onChange={(e) => setNewCountryName(e.target.value)}
-  />
-  <input
-    className="input-field"
-    type="text"
-    placeholder="Country Code"
-    value={newCountryCode}
-    onChange={(e) => setNewCountryCode(e.target.value)}
-  />
-  <input
-    className="input-field"
-    type="text"
-    placeholder="Email"
-    value={newEmail}
-    onChange={(e) => setNewEmail(e.target.value)}
-  />
-  <select
-    className="select-field"
-    value={newStatus}
-    onChange={(e) => setNewStatus(e.target.value)}
-  >
-    <option value={1}>Active</option>
-    <option value={2}>Inactive</option>
-  </select>
-  <button className="add-button" onClick={addCountry}>
-    Add
-  </button>
-</div>
+      <div className="container">
+        <h1>Create</h1>
+        <div className="input-container">
+    <input
+      className="input-field"
+      type="text"
+      placeholder="Name"
+      value={newCountryName}
+      onChange={(e) => setNewCountryName(e.target.value)}
+    />
+    <input
+      className="input-field"
+      type="text"
+      placeholder="Country Code"
+      value={newCountryCode}
+      onChange={(e) => setNewCountryCode(e.target.value)}
+    />
+    <input
+      className="input-field"
+      type="text"
+      placeholder="Email"
+      value={newEmail}
+      onChange={(e) => setNewEmail(e.target.value)}
+    />
+    <select
+      className="select-field"
+      value={newStatus}
+      onChange={(e) => setNewStatus(e.target.value)}
+    >
+      <option value={1}>Active</option>
+      <option value={2}>Inactive</option>
+    </select>
+    <button className="add-button" onClick={addCountry}>
+      Add
+    </button>
+  </div>
 
       <h1>List</h1>
       <div className="table-container">
@@ -154,6 +168,14 @@ const App = () => {
                     >
                       Delete
                     </Button>
+                    <Button
+                      type="primary"
+                      style={{ marginLeft: 8 }}
+                      icon={<EditOutlined />}
+                      onClick={() => handleEdit(record)}
+                    >
+                      Edit
+                    </Button>
                   </span>
                 ),
               },
@@ -161,6 +183,12 @@ const App = () => {
           />
         )}
       </div>
+      <EditModal
+        country={editedCountry}
+        isModalVisible={isEditModalVisible}
+        handleModalClose={handleEditModalClose}
+        getCountries={getCountries}
+      />
     </div>
   );
 }

@@ -58,7 +58,7 @@
 .country-table {
   width: 100%;
   border-collapse: collapse;
-  border-bottom: 1px solid #ccc; /* Add a border at the bottom of the table */
+  border-bottom: 1px solid #ccc;
 }
 
 .country-table th, .country-table td {
